@@ -1,15 +1,64 @@
 <html>
   <script>
-	chrome.tabs.onUpdated.addListener(function(tabid, changeInfo, tab){
-
-       function setTitle() {
-            var details = {
-    	        'title': 'Тролололо!!'
-    	    };
-    		chrome.browserAction.setTitle(details);
-        }
-		
-    });
+    /*
+    chrome.tabs.onCreated.addListener(function(tab) {
+    });*/
 	
+    localStorage.viewed_tasks = localStorage.viewed_tasks || '{}';
+
+	// creating the updated event , raise when an tab is updated , check the url to know if a redmine is currently viewed, and add to the redmine history
+	chrome.tabs.onUpdated.addListener(function(tabid, changeInfo, tab){
+	
+		if (tab.url){
+			var url = tab.url;
+			var issues_url = get_issue_url();
+			
+			if (url.indexOf(issues_url) != 0){
+				return;
+            }
+			
+			//// adding the bug in the history
+			 var task_id = parseInt(url.substr(issues_url.length).replace(/\//g, ''));
+
+			 var views = JSON.parse(localStorage.viewed_tasks)
+			 if (!isNaN(task_id)){
+                views[task_id] = new Date();
+                localStorage.viewed_tasks = JSON.stringify(views);
+                recalculate();
+			 }
+		}
+    });
+
+    function get_issue_url(id){
+		var url = localStorage.redmine_url + (localStorage.redmine_prefix || 'issues/');
+        if(id){
+            url += id;
+        }
+        return url;
+    }
+
+    //window.setInterval(5*6*1000, function(){
+    window.setInterval(recalculate, 5000);
+
+    function recalculate(){
+        var xhr = new XMLHttpRequest();
+        xhr.onload = function(e){
+            var count = 0;
+            var views = JSON.parse(localStorage.viewed_tasks);
+            var tasks = JSON.parse(this.responseText).issues;
+            for (var i=0; i<tasks.length; i++){
+                var viewed = views[tasks[i].id + ''];
+                viewed = viewed?new Date(viewed): null;
+                var updated = new Date(tasks[i].updated_on);
+                if (!viewed || updated > viewed){
+                    count++;
+                }
+            }
+            console.log(count);
+            chrome.browserAction.setBadgeText({'text': (count || '') + ''});
+        }
+        xhr.open('GET', localStorage.redmine_url + 'issues.json?assigned_to_id=me&limit=1000', true);
+        xhr.send(null);
+    }
   </script>
 </html>
