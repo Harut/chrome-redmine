@@ -1,22 +1,28 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+
+		<script type="text/javascript">
+            var css = localStorage.redmine_url + 'themes/alternate/stylesheets/application.css'; // XXX
+            document.write('<link href="'+ css +'" rel="stylesheet" type="text/css">')
+        </script>
+
 		<style>
         body {
-            min-width:300px;
+            min-width:350px;
+            overflow-x: hidden;
         }
         #tasks{
             padding: 0; margin: 0;
-        }
-        #tasks>li{
-            list-style: none;
             font-size: 12px;
             font-family: sans;
+        }
+        #tasks td{
             padding:2px;
         }
 		</style>
-		<script type="text/javascript">
 			
+		<script type="text/javascript">
 			function LoadPage(){
 				load_tasks();
 			}
@@ -26,19 +32,32 @@
                 xhr.onload = function(e){
                     var tasks = JSON.parse(this.responseText).issues;
                     var ul = document.getElementById('tasks');
+                    var oddeven = 'odd';
+
                     for (var i=0; i<tasks.length; i++){
-                        var task = document.createElement('li');
+                        var task = document.createElement('tr');
+                        var td1 = document.createElement('td');
                         var link = document.createElement('a');
-                        link.setAttribute('href', localStorage["redmine_url"] +'/issues/' + tasks[i].id);
+                        link.setAttribute('href', localStorage["redmine_url"] +'issues/' + tasks[i].id);
                         link.innerText = tasks[i].subject;
                         link.addEventListener('click', function(){
                             window.open(this.href);
                         });
-                        task.appendChild(link);
+                        var td2 = document.createElement('td');
+                        td2.innerText = tasks[i].status.name;
+                        
+                        var cls = 'status-' + tasks[i].status.id + ' priority-' + tasks[i].priority.id + ' ' + oddeven;
+                        oddeven = (oddeven == 'odd')? 'even':'odd';
+                        task.setAttribute('class', cls);
+                        
+
+                        task.appendChild(td1);
+                        task.appendChild(td2);
+                        td1.appendChild(link);
                         ul.appendChild(task);
                     }
                 }
-                xhr.open('GET', localStorage["redmine_url"] + 'issues.json?assigned_to_id=me', true);
+                xhr.open('GET', localStorage["redmine_url"] + 'issues.json?assigned_to_id=me&sort=priority%3Adesc', true);
                 xhr.send(null);
             }
 		
@@ -46,6 +65,6 @@
 	  </script>
 	</head>
 	<body onload="LoadPage();">
-        <ul id='tasks'></ul>
+        <table id='tasks'></table>
 	</body>
 </html>
