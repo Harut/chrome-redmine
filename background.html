@@ -1,0 +1,15 @@
+<html>
+  <script>
+	chrome.tabs.onUpdated.addListener(function(tabid, changeInfo, tab){
+
+       function setTitle() {
+            var details = {
+    	        'title': 'Тролололо!!'
+    	    };
+    		chrome.browserAction.setTitle(details);
+        }
+		
+    });
+	
+  </script>
+</html>

@@ -1,0 +1,51 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<style>
+        body {
+            min-width:300px;
+        }
+        #tasks{
+            padding: 0; margin: 0;
+        }
+        #tasks>li{
+            list-style: none;
+            font-size: 12px;
+            font-family: sans;
+            padding:2px;
+        }
+		</style>
+		<script type="text/javascript">
+			
+			function LoadPage(){
+				load_tasks();
+			}
+
+            function load_tasks(){
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function(e){
+                    var tasks = JSON.parse(this.responseText).issues;
+                    var ul = document.getElementById('tasks');
+                    for (var i=0; i<tasks.length; i++){
+                        var task = document.createElement('li');
+                        var link = document.createElement('a');
+                        link.setAttribute('href', localStorage["redmine_url"] +'/issues/' + tasks[i].id);
+                        link.innerText = tasks[i].subject;
+                        link.addEventListener('click', function(){
+                            window.open(this.href);
+                        });
+                        task.appendChild(link);
+                        ul.appendChild(task);
+                    }
+                }
+                xhr.open('GET', localStorage["redmine_url"] + 'issues.json?assigned_to_id=me', true);
+                xhr.send(null);
+            }
+		
+			
+	  </script>
+	</head>
+	<body onload="LoadPage();">
+        <ul id='tasks'></ul>
+	</body>
+</html>

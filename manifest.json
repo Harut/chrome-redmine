@@ -1,0 +1,22 @@
+{
+"update_url":"http://clients2.google.com/service/update2/crx",
+  "name": "Redmine Extansions",
+  "version": "0.1",
+  "description": "Redmin notifier",
+  "options_page": "options.html",
+  "background_page": "background.html",
+  "icons": { 
+  "16": "icon16.png",
+  "48": "icon48.png",
+  "128": "icon128.png"
+  },
+  "browser_action": {
+	"default_title":"Redmine tasks",
+    "default_icon": "icon.png",
+	"popup": "popup.html"
+  },
+  "permissions": [
+	"tabs",
+    "<all_urls>"
+  ]
+}

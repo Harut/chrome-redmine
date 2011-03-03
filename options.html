@@ -1,0 +1,190 @@
+<html>
+<head><title>Quick Redmine - Options Page</title>
+<meta charset="utf-8" />
+
+<style>
+		
+		body, html {
+		    padding: 0;
+		    margin: 0;
+		}
+		
+		body 
+		{
+			font-family:"arial";
+			font-size:14px;
+			color:#333333;
+			
+		}
+		
+		p {
+			padding: 8px 8px 8px 15px;
+		}
+		
+		input[type="text"]
+		{
+			color:black;
+			font-size:13px;
+			padding:3px;
+			width: 100%;
+			display: block;
+            border: 1px solid #D7D7D7;
+		}
+		
+
+		
+		#GeneralOptions
+		{
+			border:1px solid #333333;
+			background-color:#F8FAFF;
+			padding:5px 0px 0px 5px
+		}
+		
+		
+		#page_state
+		{
+			color:#333333;
+		}
+		
+		
+		h1.page_title{
+		    padding-left: 65px;
+		    line-height: 30px;
+		    margin-top: 15px;
+		    height: 30px;
+		    background: url(h1title_bg.png) no-repeat left top #2c4056;
+		    color: white;
+		    font-size: 16px;
+		}
+		
+		h2.section_title{
+		    padding-left: 15px;
+		    line-height: 20px;
+		    margin-top: 10px;
+		    height: 20px;
+		    background: #507aaa;
+		    color: white;
+		    font-size: 12px;
+		}
+		
+        .inner_wrapper {
+            margin-left: 50px;
+        }
+        
+        ul {
+            list-style: none outside none;
+            width: 50%;
+            padding-left: 15px;
+            padding-top: 0;
+            margin-top: 0;
+        }
+        
+        label {
+            font-size: 12px;
+        }
+        
+        li {
+            padding: 10px 0;
+        }
+        
+        .buttons input{
+            background-color: #F2F2F2;
+            color: #222;
+            border: 1px outset #CCC;
+            }
+            .buttons input:hover {
+                background-color: #CCB;
+                }
+        #page_state {
+            height: auto;
+            padding:0;
+            color: black;
+            font-style: italic;
+            font-size: 12px;
+        }
+        li.buttons {
+            text-align: left;
+            }
+            li.buttons a {
+                color: black;
+                display: inline-block;
+                padding: 4px 20px;
+                position: relative;
+                left: -20px;
+                }
+                li.buttons a:hover {
+                    background: #7f8082;
+                    color: white;
+                    }
+                    li.buttons a:active {
+                        background: #58595b;
+                        color: white;
+                        }
+		
+</style>
+		
+	<script type="text/javascript">
+
+	// Saves options to localStorage.
+	function save_options() 
+	{
+	
+		document.getElementById('page_state').innerHTML = "";
+
+		/* REDMINE URL */ 
+		var redmine_url = document.getElementById('redmine_url').value;
+		if ( redmine_url === undefined | redmine_url == null | redmine_url == "") 
+		{
+			document.getElementById('page_state').innerHTML += "Wrong url ";
+			return;
+		}
+		else 
+		{
+			localStorage["redmine_url"] = redmine_url;
+		}
+		
+		document.getElementById('page_state').innerHTML = "Update done";		
+	}
+
+	// Restores select box state to saved value from localStorage.
+	function restore_options() {
+		
+		/* REDMINE URL */
+		var redmine_url = localStorage["redmine_url"];
+		if (  redmine_url !== undefined && redmine_url != null && redmine_url != "")
+		{
+			document.getElementById('redmine_url').setAttribute("value",redmine_url);
+		}
+	}
+
+	</script>
+
+</head>
+<body onload="restore_options()">
+
+<div id="wrapper">
+
+    <h1 class="page_title">Redmine Extansions</h1>
+    
+    
+    
+    <div class="inner_wrapper">
+        <p>Авторы и другая текстовая инфа, аля Welcome ;)</p>
+        <h2 class="section_title">Настройки</h2>
+        <ul class="options">
+            <li>
+                <div class="option">
+                    <label for="redmine_url">URL на Redmine:</label>
+                    <input id="redmine_url" type="text" size="60"  />
+                </div>
+            </li>
+            <li id="page_state"></li>
+            <li class="buttons">
+                <input name="commit" type="button" onclick="save_options()" value="Сохранить"/>
+            </li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>
