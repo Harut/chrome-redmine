@@ -40,7 +40,7 @@
     }
 
     //window.setInterval(5*6*1000, function(){
-    window.setInterval(recalculate, 5000);
+    window.setInterval(recalculate, (localStorage.interval_upd || 5) * 1000);
 
     function recalculate(){
         var xhr = new XMLHttpRequest();
@@ -65,20 +65,34 @@
         xhr.send(null);
     }
 
+    function get_select_values(response, select_id){
+        var result = {};
+        response = response.replace(/\s+/g, ' ');
+        var options = RegExp('<select[^>]+id="' +select_id+ '".*?>(.+?)</select>').exec(response)[1];
+        options = options.match(RegExp('<option value="(.+?)">(.+?)</option>', 'g'));
+
+        for (var i=0; i<options.length; i++){
+            var option = RegExp('<option value="(.+?)">(.+?)</option>').exec(options[i]);
+            result[option[1]] = {color: Math.min(i+1, 5), name: option[2]};
+        }
+        return result;
+    }
+
     function load_priorities(){
         var xhr = new XMLHttpRequest();
         xhr.open('GET', localStorage.redmine_url + 'issues', true);
         xhr.onload = function(e){
-            var priorities = {};
-            var options = RegExp('<select[^>]+id="values_priority_id".*?>(.+?)</select>').exec(this.response.replace(/\s+/g, ' '))[1];
-            options = options.match(RegExp('<option value="(.+?)">(.+?)</option>', 'g'));
-
-            console.log(options)
-            for (var i=0; i<options.length; i++){
-                var option = RegExp('<option value="(.+?)">(.+?)</option>').exec(options[i]);
-                priorities[option[1]] = {color: Math.min(i+1, 5), name: option[2]};
-            }
+            var priorities = get_select_values(this.responseText, 'values_priority_id');
             localStorage.priorities = JSON.stringify(priorities);
+        }
+        xhr.send(null);
+    }
+    function load_statuses(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', localStorage.redmine_url + 'issues', true);
+        xhr.onload = function(e){
+            var statuses = get_select_values(this.responseText, 'values_status_id');
+            localStorage.statuses = JSON.stringify(statuses);
         }
         xhr.send(null);
     }
