@@ -1,5 +1,5 @@
 <html>
-<head><title>Quick Redmine - Options Page</title>
+<head><title>Redmine Extension</title>
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="options.css"/>
 
@@ -12,23 +12,32 @@
 		page_state.innerHTML = "";
 
 		/* REDMINE URL */ 
-		var redmine_url = document.getElementById('redmine_url').value;
-		if (redmine_url) {
-			page_state.innerHTML += "Пустой URL. ";
-            page_state.style.color = 'red';
+		var redmine_url = document.getElementById('redmine_url');
+		if (!redmine_url.value) {
+			//page_state.innerHTML += "Пустой URL. ";
+            //page_state.style.color = 'red';
+            //page_state.className = 'show';
+            redmine_url.classList.add('error');
 			return;
 		} else {
-			localStorage["redmine_url"] = redmine_url;
+		    redmine_url.classList.remove('error');
+			localStorage["redmine_url"] = redmine_url.value;
 		}
 		
+		var timeout_id;
+		
 		/* INTERVAL UPDATE */ 
-		var interval_upd = document.getElementById('interval_upd').value;
-		if (interval_upd) {
-            page_state.innerHTML += "Не указан интервал. ";
-            page_state.style.color = 'red';
+		var interval_upd = document.getElementById('interval_upd');
+		if (!interval_upd.value) {
+            //page_state.innerHTML += "Не указан интервал. ";
+            //page_state.style.color = 'red';
+            //page_state.className = 'show';
+            interval_upd.classList.add('error');
+            
 			return;
 		} else {
-			localStorage["interval_upd"] = interval_upd;
+		    interval_upd.classList.remove('error');
+			localStorage["interval_upd"] = interval_upd.value;
 		}
 		
         page_state.innerHTML = "Сохранено.";		
@@ -55,13 +64,19 @@
         for (var i=0; i<inputs.length; i++) {
             if (inputs[i].type == 'text' || inputs[i].type == 'number') {
                 inputs[i].onfocus = function() {
-                    this.parentNode.parentNode.className = 'focus';
+                    this.parentNode.parentNode.classList.add('focus');
                 }
                 inputs[i].onblur = function() {
-                    this.parentNode.parentNode.className = '';
+                    this.parentNode.parentNode.classList.remove('focus');
                 }
             }
         }
+        
+        //if (localStorage.priorities) {
+        //    var pp = document.getElementById('priorities');
+        //    pp.parentNode.parentNode.classList.add('enabled');
+        //    pp.parentNode.parentNode.style.display = 'block';
+        //}
 	}
 
 	
@@ -73,36 +88,55 @@
 
 <div id="wrapper">
 
-    <h1 class="page_title">Redmine Extansions</h1>
+    <h1 class="page_title">Redmine Extension</h1>
     
     
     
     <div class="inner_wrapper">
         <p>Авторы и другая текстовая инфа, аля Welcome ;)</p>
-        <h2 class="section_title">Настройки</h2>
+        <h2 class="section_title">Главные настройки</h2>
         <ul class="options">
-            <li class="">
+            <li class="opt">
                 <div class="option">
-                    <label for="redmine_url">URL на Redmine:</label>
+                    <label for="redmine_url">URL на Redmine<span class="req">*</span>:</label>
                     <input id="redmine_url" type="text" size="60" />
                 </div>
             </li>
-            <li>
+            <li class="opt">
                 <div class="option">
-                    <label for="interval_upd">Интервал обновлений (в мин):</label>
+                    <label for="interval_upd">Интервал обновлений (в мин)<span class="req">*</span>:</label>
                     <input id="interval_upd" class="small" type="number" size="5"  />
                 </div>
             </li>
-            <li class="">
+            <li class="buttons">
+                <div class="state"><p id="page_state"></p></div>
+                <input name="commit" type="button" onclick="save_options()" value="Сохранить"/>
+                
+            </li>
+        </ul>
+        
+        
+        <h2 class="section_title">Фильтры</h2>
+        <ul class="options">
+            <li class="opt">
                 <div class="option">
                     <label for="redmine_url">Строка для фильтра:</label>
                     <input id="redmine_url" type="text" size="60" />
                     <small>будет использоваться для запроса к API Redmine.</small>
                 </div>
             </li>
+            
+            <li class="opt" style="display:none;">
+                <div class="option">
+                    <label for="priorities">Приоритеты:</label>
+                    
+                </div>
+            </li>
+
             <li class="buttons">
+                <div class="state"><p id="page_state"></p></div>
                 <input name="commit" type="button" onclick="save_options()" value="Сохранить"/>
-                <span id="page_state"></span>
+                
             </li>
         </ul>
     </div>
