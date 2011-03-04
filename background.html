@@ -5,6 +5,7 @@
     });*/
 	
     localStorage.viewed_tasks = localStorage.viewed_tasks || '{}';
+    localStorage.filter = localStorage.filter || 'assigned_to_id=me';
 
 	// creating the updated event , raise when an tab is updated , check the url to know if a redmine is currently viewed, and add to the redmine history
 	chrome.tabs.onUpdated.addListener(function(tabid, changeInfo, tab){
@@ -46,18 +47,20 @@
             var count = 0;
             var views = JSON.parse(localStorage.viewed_tasks);
             var tasks = JSON.parse(this.responseText).issues;
+            var statuses = {}
             for (var i=0; i<tasks.length; i++){
                 var viewed = views[tasks[i].id + ''];
                 viewed = viewed?new Date(viewed): null;
                 var updated = new Date(tasks[i].updated_on);
-                if (!viewed || updated > viewed){
+                statuses[tasks[i].id] = !viewed || updated > viewed;
+                if (statuses[tasks[i].id]){
                     count++;
-                }
+                } 
             }
-            console.log(count);
+            localStorage.new_tasks = JSON.stringify(statuses);
             chrome.browserAction.setBadgeText({'text': (count || '') + ''});
         }
-        xhr.open('GET', localStorage.redmine_url + 'issues.json?assigned_to_id=me&limit=1000', true);
+        xhr.open('GET', localStorage.redmine_url + 'issues.json?'+localStorage.filter+'&limit=100', true);
         xhr.send(null);
     }
   </script>

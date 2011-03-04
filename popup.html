@@ -34,6 +34,8 @@
                     var ul = document.getElementById('tasks');
                     var oddeven = 'odd';
 
+                    var new_tasks = JSON.parse(localStorage.new_tasks || '{}');
+
                     for (var i=0; i<tasks.length; i++){
                         var task = document.createElement('tr');
                         var td1 = document.createElement('td');
@@ -43,10 +45,17 @@
                         link.addEventListener('click', function(){
                             window.open(this.href);
                         });
+                        if(new_tasks[tasks[i].id] !== false){
+                            link.style.fontWeight = 'bold';
+                        }
                         var td2 = document.createElement('td');
                         td2.innerText = tasks[i].status.name;
+
+                        var priority = {
+                            1: 2, 2: 1, 3: 3
+                        }[tasks[i].priority.id];
                         
-                        var cls = 'status-' + tasks[i].status.id + ' priority-' + tasks[i].priority.id + ' ' + oddeven;
+                        var cls = 'status-' + tasks[i].status.id + ' priority-' + priority + ' ' + oddeven;
                         oddeven = (oddeven == 'odd')? 'even':'odd';
                         task.setAttribute('class', cls);
                         
@@ -57,7 +66,7 @@
                         ul.appendChild(task);
                     }
                 }
-                xhr.open('GET', localStorage["redmine_url"] + 'issues.json?assigned_to_id=me&sort=priority%3Adesc', true);
+                xhr.open('GET', localStorage.redmine_url + 'issues.json?'+localStorage.filter+'&sort=priority%3Adesc&limit=100', true);
                 xhr.send(null);
             }
 		
