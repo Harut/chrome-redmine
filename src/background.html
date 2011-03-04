@@ -6,6 +6,7 @@
 	
     localStorage.viewed_tasks = localStorage.viewed_tasks || '{}';
     localStorage.filter = localStorage.filter || 'assigned_to_id=me';
+    if(!localStorage.priorities){ load_priorities(); }
 
 	// creating the updated event , raise when an tab is updated , check the url to know if a redmine is currently viewed, and add to the redmine history
 	chrome.tabs.onUpdated.addListener(function(tabid, changeInfo, tab){
@@ -61,6 +62,24 @@
             chrome.browserAction.setBadgeText({'text': (count || '') + ''});
         }
         xhr.open('GET', localStorage.redmine_url + 'issues.json?'+localStorage.filter+'&limit=100', true);
+        xhr.send(null);
+    }
+
+    function load_priorities(){
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', localStorage.redmine_url + 'issues', true);
+        xhr.onload = function(e){
+            var priorities = {};
+            var options = RegExp('<select[^>]+id="values_priority_id".*?>(.+?)</select>').exec(this.response.replace(/\s+/g, ' '))[1];
+            options = options.match(RegExp('<option value="(.+?)">(.+?)</option>', 'g'));
+
+            console.log(options)
+            for (var i=0; i<options.length; i++){
+                var option = RegExp('<option value="(.+?)">(.+?)</option>').exec(options[i]);
+                priorities[option[1]] = {color: Math.min(i+1, 5), name: option[2]};
+            }
+            localStorage.priorities = JSON.stringify(priorities);
+        }
         xhr.send(null);
     }
   </script>

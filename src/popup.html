@@ -45,9 +45,7 @@
                     var td3 = document.createElement('td');
                     td3.innerText = tasks[i].project.name;
 
-                    var priority = {
-                        1: 2, 2: 1, 3: 3
-                    }[tasks[i].priority.id];
+                    var priority = JSON.parse(localStorage.priorities)[tasks[i].priority.id].color;
                     
                     var cls = 'issue status-' + tasks[i].status.id + ' priority-' + priority + ' ' + oddeven;
                     oddeven = (oddeven == 'odd')? 'even':'odd';
