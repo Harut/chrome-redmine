@@ -1,0 +1,141 @@
+body, html {
+    padding: 0;
+    margin: 0;
+}
+
+body 
+{
+	font-family:"arial";
+	font-size:14px;
+	color:#333333;
+	
+}
+
+p {
+	padding: 8px 8px 8px 25px;
+}
+
+input
+{
+	color:black;
+	font-size:13px;
+	padding:3px;
+	width: auto;
+	display: block;
+    border: 1px solid #D7D7D7;
+    outline: none;
+}
+
+
+input.small {
+    width: 30%;
+}
+li {
+    -webkit-transition: all 0.4s ease-in-out;
+    transition: all 0.4;
+}
+li.focus {
+    -webkit-box-shadow: 0 0px 8px rgba(0, 0, 0, 0.8), 0px 0 10px rgba(0, 0, 0, 0.1) inset;
+    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.8), 0px 0 10px rgba(0, 0, 0, 0.1) inset;
+}
+
+
+
+#GeneralOptions
+{
+	border:1px solid #333333;
+	background-color:#F8FAFF;
+	padding:5px 0px 0px 5px
+}
+
+
+#page_state
+{
+	color:#333333;
+}
+
+
+h1.page_title{
+    padding-left: 75px;
+    line-height: 30px;
+    margin-top: 15px;
+    height: 30px;
+    background: url(h1title_bg.png) no-repeat left top #2c4056;
+    color: white;
+    font-size: 16px;
+}
+
+h2.section_title{
+    padding-left: 25px;
+    line-height: 20px;
+    margin-top: 10px;
+    height: 20px;
+    background: #507aaa;
+    color: white;
+    font-size: 12px;
+}
+
+.inner_wrapper {
+    margin-left: 50px;
+}
+
+ul {
+    list-style: none outside none;
+    width: 700px;
+    padding-left: 25px;
+    padding-top: 0;
+    margin-top: 0;
+}
+
+label {
+    font-size: 12px;
+    float: left;
+    display:block;
+    width: 200px;
+    padding:3px;
+    text-align: right;
+    margin-right: 10px;
+}
+
+li {
+    padding: 10px 0;
+}
+
+.buttons input{
+    background-color: #F2F2F2;
+    color: #222;
+    border: 1px outset #CCC;
+    }
+    .buttons input:hover {
+        background-color: #CCB;
+        }
+#page_state {
+    color: gray;
+    font-style: italic;
+    font-size: 12px;
+    line-height: 100%;
+    margin-left: 10px;
+}
+
+small {
+    margin-left: 215px;
+    font-size: 10px;
+}
+li.buttons {
+    text-align: left;
+    }
+    li.buttons a {
+        color: black;
+        display: inline-block;
+        padding: 4px 20px;
+        position: relative;
+        left: -20px;
+        }
+        li.buttons a:hover {
+            background: #7f8082;
+            color: white;
+            }
+            li.buttons a:active {
+                background: #58595b;
+                color: white;
+                }
