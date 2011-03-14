@@ -4,28 +4,68 @@
       <link href="popup.css" rel="stylesheet" type="text/css"/>
 
       <style>
-        #tasks{
+        #tasks {
             padding: 0; margin: 0;
+        }
+        #tasks tr>td:first-child { text-align: left}
+        #tasks td { padding: 4px; border-width: 1px; border-style: solid;
             font-size: 12px;
             font-family: sans;
         }
-        #tasks tr>td:first-child { text-align: left}
-        #tasks td { padding: 4px; border-width: 1px; border-style: solid;}
 	  </style>
 			
-	  <script type="text/javascript">
-		function LoadPage(){
-			load_tasks();
+      <script type="text/javascript">
+
+        function LoadPage(){
+            load_tabs();
 		}
 
-        function load_tasks(){
+        function tab_click(){
+            var active_tab = document.getElementById('tabs').getElementsByClassName('active')[0];
+            active_tab.className = '';
+            document.getElementById(active_tab.getAttribute('for')).style.display = 'none';
+
+            this.className = 'active';
+            document.getElementById(this.getAttribute('for')).style.display = '';
+        }
+
+        function load_tabs(){
+            tabs = JSON.parse(localStorage.tabs);
+            var tabs_elem = document.getElementById('tabs');
+            for (var i=0; i<tabs.length; i++){
+                var tab = document.createElement('label');
+                tab.setAttribute('for', 'tab-' + i);
+                tab.innerText = tabs[i].name;
+                tab.addEventListener('click', tab_click);
+                tabs_elem.appendChild(tab);
+                load_tasks(i, tabs[i], tab);
+                //tabs[i].tab = tab;
+                if (i==0) {
+                    tab.className = 'active';
+                }
+            }
+            if (tabs.length > 1){
+                tabs_elem.style.display = 'block';
+            }
+        }
+
+
+        function load_tasks(index, config, tab){
             var xhr = new XMLHttpRequest();
             xhr.onload = function(e){
                 var tasks = JSON.parse(this.responseText).issues;
-                var ul = document.getElementById('tasks');
+                var tabs_contents = document.getElementById('tasks');
+                var table = document.createElement('table');
+                table.setAttribute('id', 'tab-' + index);
+                if (index != 0){
+                    table.style.display = 'none';
+                }
+                tabs_contents.appendChild(table);
+
                 var oddeven = 'odd';
 
                 var new_tasks = JSON.parse(localStorage.new_tasks || '{}');
+                var has_unread = false;
 
                 for (var i=0; i<tasks.length; i++){
                     var task = document.createElement('tr');
@@ -38,6 +78,7 @@
                     });
                     if(new_tasks[tasks[i].id] !== false){
                         link.style.fontWeight = 'bold';
+                        has_unread = true;
                     }
                     var td2 = document.createElement('td');
                     td2.innerText = tasks[i].status.name;
@@ -50,16 +91,19 @@
                     var cls = 'issue status-' + tasks[i].status.id + ' priority-' + priority + ' ' + oddeven;
                     oddeven = (oddeven == 'odd')? 'even':'odd';
                     task.setAttribute('class', cls);
-                    
 
                     task.appendChild(td1);
                     task.appendChild(td2);
                     task.appendChild(td3);
                     td1.appendChild(link);
-                    ul.appendChild(task);
+                    table.appendChild(task);
+                }
+                if (has_unread){
+                    tab.style.fontWeight = 'bold';
                 }
             }
-            xhr.open('GET', localStorage.redmine_url + 'issues.json?'+localStorage.filter+'&sort=priority%3Adesc&limit=100', true);
+            var url = localStorage.redmine_url + 'issues.json?'+ config.filter +'&sort=priority%3Adesc&limit=100';
+            xhr.open('GET', url, true);
             xhr.send(null);
         }
 
@@ -73,6 +117,7 @@
 	  </script>
 	</head>
 	<body onload="LoadPage();">
-        <table id='tasks' class="list"></table>
+        <div id="tabs" style="display: none"></div>
+        <div id='tasks'></div>
 	</body>
 </html>

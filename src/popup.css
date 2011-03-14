@@ -13,14 +13,14 @@ a:hover, a:active { color: #c61a1a; text-decoration: underline;}
 a.issue.closed, a.issue.closed:link, a.issue.closed:visited { color: #999; text-decoration: line-through; }
 
 /***** Tables *****/
-table.list { border: 1px solid #e4e4e4;  border-collapse: collapse; width: 100%; margin-bottom: 4px; }
-table.list th {  background-color:#EEEEEE; padding: 4px; white-space:nowrap; }
-table.list td { vertical-align: top; }
-table.list td.id { width: 2%; text-align: center;}
-table.list td.checkbox { width: 15px; padding: 0px;}
-table.list td.buttons { width: 15%; white-space:nowrap; text-align: right; }
-table.list td.buttons a { padding-right: 0.6em; }
-table.list caption { text-align: left; padding: 0.5em 0.5em 0.5em 0; }
+table { border: 1px solid #e4e4e4;  border-collapse: collapse; width: 100%; margin-bottom: 4px; }
+table th {  background-color:#EEEEEE; padding: 4px; white-space:nowrap; }
+table td { vertical-align: top; }
+table td.id { width: 2%; text-align: center;}
+table td.checkbox { width: 15px; padding: 0px;}
+table td.buttons { width: 15%; white-space:nowrap; text-align: right; }
+table td.buttons a { padding-right: 0.6em; }
+table caption { text-align: left; padding: 0.5em 0.5em 0.5em 0; }
 
 tr.issue { text-align: center; white-space: nowrap; }
 tr.issue td.subject, tr.issue td.category, td.assigned_to { white-space: normal; }

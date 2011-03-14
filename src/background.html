@@ -5,10 +5,14 @@
     });*/
 	
     localStorage.viewed_tasks = localStorage.viewed_tasks || '{}';
-    localStorage.filter = localStorage.filter || 'assigned_to_id=me';
+    localStorage.tabs = localStorage.tabs || JSON.stringify([
+        {'name': 'My',       'filter': 'assigned_to_id=me'},
+        {'name': 'Free',     'filter': 'assigned_to_id=!*'},
+        {'name': 'Watching', 'filter': 'watcher_id=me'}
+    ]);
     if(!localStorage.priorities){ load_priorities(); }
 
-	// creating the updated event , raise when an tab is updated , check the url to know if a redmine is currently viewed, and add to the redmine history
+    // check the url to know if a redmine is currently viewed
 	chrome.tabs.onUpdated.addListener(function(tabid, changeInfo, tab){
 	
 		if (tab.url){
@@ -19,15 +23,15 @@
 				return;
             }
 			
-			//// adding the bug in the history
-			 var task_id = parseInt(url.substr(issues_url.length).replace(/\//g, ''));
+		    // adding the bug in the history
+			var task_id = parseInt(url.substr(issues_url.length).replace(/\//g, ''));
 
-			 var views = JSON.parse(localStorage.viewed_tasks)
-			 if (!isNaN(task_id)){
+			var views = JSON.parse(localStorage.viewed_tasks)
+			if (!isNaN(task_id)){
                 views[task_id] = new Date();
                 localStorage.viewed_tasks = JSON.stringify(views);
                 recalculate();
-			 }
+			}
 		}
     });
 
