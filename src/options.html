@@ -40,6 +40,23 @@
 			localStorage["interval_upd"] = interval_upd.value;
 		}
 		
+        /* TABS UPDATE */
+        var tabs = document.querySelectorAll('#tabs-list>div');
+        var tabs_conf = [];
+        for (var i=0; i<tabs.length; i++){
+            var data = {};
+            var tab = tabs[i];
+
+            data.name = tab.querySelector('[name=name]').value;
+            data.filter = tab.querySelector('[name=filter]').value;
+            data.show_status = tab.querySelector('[name=show_status]').checked;
+            data.show_project = tab.querySelector('[name=show_project]').checked;
+            data.show_assignee = tab.querySelector('[name=show_assignee]').checked;
+
+            tabs_conf.push(data);
+        }
+        localStorage["tabs"] = JSON.stringify(tabs_conf);
+
         page_state.innerHTML = "Сохранено.";		
 	}
 
@@ -77,6 +94,36 @@
         //    pp.parentNode.parentNode.classList.add('enabled');
         //    pp.parentNode.parentNode.style.display = 'block';
         //}
+
+        function draw_tab(data){
+            var tab = document.createElement('div');
+            tab.innerHTML = document.getElementById('tab-to-clone').innerHTML;
+
+            tab.querySelector('[name=name]').setAttribute('value', data.name || '');
+            tab.querySelector('[name=filter]').setAttribute('value', data.filter || '');
+            tab.querySelector('[name=show_status]').checked = data.show_status;
+            tab.querySelector('[name=show_project]').checked = data.show_project;
+            tab.querySelector('[name=show_assignee]').checked = data.show_assignee;
+
+            tab.querySelector('.delete-tab').addEventListener('click', function(){
+                this.parentNode.parentNode.removeChild(this.parentNode);
+            });
+
+            document.getElementById('tabs-list').appendChild(tab);
+        }
+        if (localStorage.tabs){
+            var tabs = JSON.parse(localStorage.tabs);
+            for (var i=0; i<tabs.length; i++){
+                draw_tab(tabs[i]);
+            }
+        }
+
+        document.getElementById('add-tab').addEventListener('click', function(){
+            draw_tab({});
+        });
+
+        
+
 	}
 
 	
@@ -118,18 +165,33 @@
         
         <h2 class="section_title">Фильтры</h2>
         <ul class="options">
-            <li class="opt">
-                <div class="option">
-                    <label for="redmine_url">Строка для фильтра:</label>
-                    <input id="redmine_url" type="text" size="60" />
-                    <small>будет использоваться для запроса к API Redmine.</small>
-                </div>
-            </li>
-            
+
             <li class="opt" style="display:none;">
                 <div class="option">
                     <label for="priorities">Приоритеты:</label>
                     
+                </div>
+            </li>
+
+            <li class="opt">
+                <div class="option">
+                    <!--label>Вкладки:</label-->
+                    <div id="tabs-list"></div>
+                    <div id="tab-to-clone" style="display: none">
+                        <label>Название</label> <input name="name" type="text"/><br/>
+                        <label>Фильтр</label> <input name="filter" type="text" size="60"/><br/>
+                        <small>будет использоваться для запроса к API Redmine.</small>
+
+                        <label><input name="show_status" type="checkbox" />
+                            Показывать колонку статуса</label>
+                        <label><input name="show_project" type="checkbox" />
+                            Показывать колонку проекта</label>
+                        <label><input name="show_assignee" type="checkbox" />
+                            Показывать колонку исполнителя</label>
+
+                        <a class="delete-tab">Удалить</a>
+                    </div>
+                    <a id="add-tab">+</a>
                 </div>
             </li>
 

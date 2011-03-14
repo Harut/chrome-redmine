@@ -6,9 +6,12 @@
 	
     localStorage.viewed_tasks = localStorage.viewed_tasks || '{}';
     localStorage.tabs = localStorage.tabs || JSON.stringify([
-        {'name': 'My',       'filter': 'assigned_to_id=me'},
-        {'name': 'Free',     'filter': 'assigned_to_id=!*'},
-        {'name': 'Watching', 'filter': 'watcher_id=me'}
+        {'name': 'My',       'filter': 'assigned_to_id=me',
+         'show_status': true, 'show_project': true, 'show_assignee': false},
+        {'name': 'Free',     'filter': 'assigned_to_id=!*',
+         'show_status': true, 'show_project': true, 'show_assignee': false},
+        {'name': 'Watching', 'filter': 'watcher_id=me',
+         'show_status': true, 'show_project': true, 'show_assignee': true}
     ]);
     if(!localStorage.priorities){ load_priorities(); }
 

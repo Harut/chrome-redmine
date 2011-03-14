@@ -12,11 +12,13 @@ body
 	
 }
 
+a {cursor: pointer}
+
 p {
 	padding: 8px 8px 8px 25px;
 }
 
-input, select
+input[type=text], select
 {
 	color:black;
 	font-size:13px;

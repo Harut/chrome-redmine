@@ -76,15 +76,29 @@
                     link.addEventListener('click', function(){
                         window.open(this.href);
                     });
+                    task.appendChild(td1);
+                    td1.appendChild(link);
+
                     if(new_tasks[tasks[i].id] !== false){
                         link.style.fontWeight = 'bold';
                         has_unread = true;
                     }
-                    var td2 = document.createElement('td');
-                    td2.innerText = tasks[i].status.name;
 
-                    var td3 = document.createElement('td');
-                    td3.innerText = tasks[i].project.name;
+                    if (config.status){
+                        var td2 = document.createElement('td');
+                        td2.innerText = tasks[i].status.name;
+                        task.appendChild(td2);
+                    }
+                    if (config.project){
+                        var td3 = document.createElement('td');
+                        td3.innerText = tasks[i].project.name;
+                        task.appendChild(td3);
+                    }
+                    if (config.assignee){
+                        var td4 = document.createElement('td');
+                        td4.innerText = tasks[i].assignee.name;
+                        task.appendChild(td4);
+                    }
 
                     var priority = JSON.parse(localStorage.priorities)[tasks[i].priority.id].color;
                     
@@ -92,10 +106,6 @@
                     oddeven = (oddeven == 'odd')? 'even':'odd';
                     task.setAttribute('class', cls);
 
-                    task.appendChild(td1);
-                    task.appendChild(td2);
-                    task.appendChild(td3);
-                    td1.appendChild(link);
                     table.appendChild(task);
                 }
                 if (has_unread){
