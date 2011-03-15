@@ -84,17 +84,17 @@
                         has_unread = true;
                     }
 
-                    if (config.status){
+                    if (config.show_status){
                         var td2 = document.createElement('td');
                         td2.innerText = tasks[i].status.name;
                         task.appendChild(td2);
                     }
-                    if (config.project){
+                    if (config.show_project){
                         var td3 = document.createElement('td');
                         td3.innerText = tasks[i].project.name;
                         task.appendChild(td3);
                     }
-                    if (config.assignee){
+                    if (config.show_assignee){
                         var td4 = document.createElement('td');
                         td4.innerText = tasks[i].assignee.name;
                         task.appendChild(td4);
