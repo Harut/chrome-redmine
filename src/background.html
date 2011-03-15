@@ -7,11 +7,14 @@
     localStorage.viewed_tasks = localStorage.viewed_tasks || '{}';
     localStorage.tabs = localStorage.tabs || JSON.stringify([
         {'name': 'My',       'filter': 'assigned_to_id=me',
-         'show_status': true, 'show_project': true, 'show_assignee': false},
+         'show_status': true, 'show_project': true, 'show_assignee': false,
+         'count_in_badge': true},
         {'name': 'Free',     'filter': 'assigned_to_id=!*',
-         'show_status': true, 'show_project': true, 'show_assignee': false},
+         'show_status': true, 'show_project': true, 'show_assignee': false,
+         'count_in_badge': false},
         {'name': 'Watching', 'filter': 'watcher_id=me',
-         'show_status': true, 'show_project': true, 'show_assignee': true}
+         'show_status': true, 'show_project': true, 'show_assignee': true,
+         'count_in_badge': true}
     ]);
     if(!localStorage.priorities){ load_priorities(); }
 
@@ -50,26 +53,34 @@
     window.setInterval(recalculate, (localStorage.interval_upd || 5) * 1000);
 
     function recalculate(){
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function(e){
-            var count = 0;
-            var views = JSON.parse(localStorage.viewed_tasks);
-            var tasks = JSON.parse(this.responseText).issues;
-            var statuses = {}
-            for (var i=0; i<tasks.length; i++){
-                var viewed = views[tasks[i].id + ''];
-                viewed = viewed?new Date(viewed): null;
-                var updated = new Date(tasks[i].updated_on);
-                statuses[tasks[i].id] = !viewed || updated > viewed;
-                if (statuses[tasks[i].id]){
-                    count++;
-                } 
-            }
-            localStorage.new_tasks = JSON.stringify(statuses);
-            chrome.browserAction.setBadgeText({'text': (count || '') + ''});
+        var tabs = JSON.parse(localStorage.tabs);
+        var counted = {};
+        var count = 0;
+        var statuses = {}
+        for (var i=tabs.length; i--;){
+            refresh_tab(tabs[i]);
         }
-        xhr.open('GET', localStorage.redmine_url + 'issues.json?'+localStorage.filter+'&limit=100', true);
-        xhr.send(null);
+        function refresh_tab(tab){
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function(e){
+                var views = JSON.parse(localStorage.viewed_tasks);
+                var tasks = JSON.parse(this.responseText).issues;
+                for (var i=0; i<tasks.length; i++){
+                    var viewed = views[tasks[i].id + ''];
+                    viewed = viewed?new Date(viewed): null;
+                    var updated = new Date(tasks[i].updated_on);
+                    statuses[tasks[i].id] = !viewed || updated > viewed;
+                    if (statuses[tasks[i].id] && tab.count_in_badge && !counted[tasks[i].id]){
+                        counted[tasks[i].id] = true;
+                        count++;
+                    } 
+                }
+                localStorage.new_tasks = JSON.stringify(statuses);
+                chrome.browserAction.setBadgeText({'text': (count || '') + ''});
+            }
+            xhr.open('GET', localStorage.redmine_url + 'issues.json?'+tab.filter+'&limit=100', true);
+            xhr.send(null);
+        }
     }
 
     function get_select_values(response, select_id){

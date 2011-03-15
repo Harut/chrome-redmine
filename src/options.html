@@ -52,6 +52,7 @@
             data.show_status = tab.querySelector('[name=show_status]').checked;
             data.show_project = tab.querySelector('[name=show_project]').checked;
             data.show_assignee = tab.querySelector('[name=show_assignee]').checked;
+            data.count_in_badge = tab.querySelector('[name=count_in_badge]').checked;
 
             tabs_conf.push(data);
         }
@@ -99,11 +100,12 @@
             var tab = document.createElement('div');
             tab.innerHTML = document.getElementById('tab-to-clone').innerHTML;
 
-            tab.querySelector('[name=name]').setAttribute('value', data.name || '');
-            tab.querySelector('[name=filter]').setAttribute('value', data.filter || '');
+            tab.querySelector('[name=name]').value = data.name || '';
+            tab.querySelector('[name=filter]').value = data.filter || '';
             tab.querySelector('[name=show_status]').checked = data.show_status;
             tab.querySelector('[name=show_project]').checked = data.show_project;
             tab.querySelector('[name=show_assignee]').checked = data.show_assignee;
+            tab.querySelector('[name=count_in_badge]').checked = data.count_in_badge;
 
             tab.querySelector('.delete-tab').addEventListener('click', function(){
                 this.parentNode.parentNode.removeChild(this.parentNode);
@@ -179,7 +181,7 @@
                     <div id="tabs-list"></div>
                     <div id="tab-to-clone" style="display: none">
                         <label>Название</label> <input name="name" type="text"/><br/>
-                        <label>Фильтр</label> <input name="filter" type="text" size="60"/><br/>
+                        <label>Фильтр</label> <textarea name="filter" type="text" style="min-width: 100%; min-height: 100px"></textarea><br/>
                         <small>будет использоваться для запроса к API Redmine.</small>
 
                         <label><input name="show_status" type="checkbox" />
@@ -188,6 +190,8 @@
                             Показывать колонку проекта</label>
                         <label><input name="show_assignee" type="checkbox" />
                             Показывать колонку исполнителя</label>
+                        <label><input name="count_in_badge" type="checkbox" />
+                            Учитывать при подсчете обновлений</label>
 
                         <a class="delete-tab">Удалить</a>
                     </div>
