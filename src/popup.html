@@ -96,7 +96,7 @@
                     }
                     if (config.show_assignee){
                         var td4 = document.createElement('td');
-                        td4.innerText = tasks[i].assignee.name;
+                        td4.innerText = tasks[i].assignee?tasks[i].assignee.name:'';
                         task.appendChild(td4);
                     }
 
