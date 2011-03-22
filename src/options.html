@@ -180,8 +180,8 @@
                     <!--label>Вкладки:</label-->
                     <div id="tabs-list"></div>
                     <div id="tab-to-clone" style="display: none">
-                        <label>Название</label> <input name="name" type="text"/><br/>
-                        <label>Фильтр</label> <textarea name="filter" type="text" style="min-width: 100%; min-height: 100px"></textarea><br/>
+                        <label>Название<span class="req">*</span>:</label> <input name="name" type="text"/><br/>
+                        <label>Фильтр<span class="req">*</span>:</label> <textarea name="filter" type="text" style="min-width: 100%; min-height: 100px"></textarea><br/>
                         <small>будет использоваться для запроса к API Redmine.</small>
 
                         <label><input name="show_status" type="checkbox" />
@@ -193,9 +193,10 @@
                         <label><input name="count_in_badge" type="checkbox" />
                             Учитывать при подсчете обновлений</label>
 
-                        <a class="delete-tab">Удалить</a>
+                        <a class="delete-tab">[x] Удалить вкладку</a>
+                        <div style="clear: both"></div>
                     </div>
-                    <a id="add-tab">+</a>
+                    <a id="add-tab">+ Добавить ещё одну вкладку</a>
                 </div>
             </li>
 

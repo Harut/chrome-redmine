@@ -189,3 +189,13 @@ small {
     font-size: 10px;
 }
 
+#tabs-list>div{
+    clear: both;
+    border:1px solid #aaa;
+    border-radius: 5px;
+    margin: 10px 0;
+    padding: 10px;
+}
+
+#add-tab{ font-weight: bold; color: #151; }
+.delete-tab{ color: #511; clear: both; display: block; float: right; }
