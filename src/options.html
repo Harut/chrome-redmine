@@ -3,6 +3,7 @@
 <meta charset="utf-8" />
 <link rel="stylesheet" type="text/css" href="options.css"/>
 
+<script type="text/javascript" src="i18n.js"></script>
 <script type="text/javascript">
 	// Сохраняем настройки в localStorage
 	function save_options() {
@@ -57,6 +58,7 @@
             tabs_conf.push(data);
         }
         localStorage["tabs"] = JSON.stringify(tabs_conf);
+        localStorage["currentLocale"] = document.getElementById('locale').value;
 
         page_state.innerHTML = "Сохранено.";		
 	}
@@ -124,8 +126,7 @@
             draw_tab({});
         });
 
-        
-
+        document.getElementById('locale').value = localStorage["currentLocale"];
 	}
 
 	
@@ -143,34 +144,42 @@
     
     <div class="inner_wrapper">
         <p>Авторы и другая текстовая инфа, аля Welcome ;)</p>
-        <h2 class="section_title">Главные настройки</h2>
+        <h2 class="section_title i18n">Common options</h2>
         <ul class="options">
             <li class="opt">
                 <div class="option">
-                    <label for="redmine_url">URL на Redmine<span class="req">*</span>:</label>
+                    <label for="redmine_url"><span class="i18n">Redmine URL</span><span class="req">*</span>:</label>
                     <input id="redmine_url" type="text" size="60" />
                 </div>
             </li>
             <li class="opt">
                 <div class="option">
-                    <label for="interval_upd">Интервал обновлений (в мин)<span class="req">*</span>:</label>
+                    <label for="interval_upd"><span class="i18n">Update interval (in minutes)</span><span class="req">*</span>:</label>
                     <input id="interval_upd" class="small" type="number" size="5"  />
+                </div>
+            </li>
+            <li class="opt">
+                <div class="option">
+                    <label for="interval_upd"><span class="i18n">Locale</span><span class="req">*</span>:</label>
+                    <select id="locale">
+                        <option value="en">English</option>
+                        <option value="ru">Русский</option>
+                    </select>
                 </div>
             </li>
             <li class="buttons">
                 <div class="state"><p id="page_state"></p></div>
-                <input name="commit" type="button" onclick="save_options()" value="Сохранить"/>
-                
+                <button onclick="save_options()" class="i18n">Save</button>
             </li>
         </ul>
         
         
-        <h2 class="section_title">Фильтры</h2>
+        <h2 class="section_title i18n">Tabs and filters</h2>
         <ul class="options">
 
             <li class="opt" style="display:none;">
                 <div class="option">
-                    <label for="priorities">Приоритеты:</label>
+                    <label for="priorities"><span class="i18n">Priorities</span>:</label>
                     
                 </div>
             </li>
@@ -180,30 +189,32 @@
                     <!--label>Вкладки:</label-->
                     <div id="tabs-list"></div>
                     <div id="tab-to-clone" style="display: none">
-                        <label>Название<span class="req">*</span>:</label> <input name="name" type="text"/><br/>
-                        <label>Фильтр<span class="req">*</span>:</label> <textarea name="filter" type="text" style="min-width: 100%; min-height: 100px"></textarea><br/>
-                        <small>будет использоваться для запроса к API Redmine.</small>
+                        <label><span class="i18n">Title</span><span class="req">*</span>:</label>
+                        <input name="name" type="text"/><br/>
+
+                        <label><span class="i18n">Filter</span><span class="req">*</span>:</label>
+                        <textarea name="filter" type="text" style="min-width: 100%; min-height: 100px"></textarea><br/>
+                        <small class="i18n">will be used for Redmine API requests.</small>
 
                         <label><input name="show_status" type="checkbox" />
-                            Показывать колонку статуса</label>
+                            <span class="i18n">Show "status" column</span></label>
                         <label><input name="show_project" type="checkbox" />
-                            Показывать колонку проекта</label>
+                            <span class="i18n">Show "project" column</span></label>
                         <label><input name="show_assignee" type="checkbox" />
-                            Показывать колонку исполнителя</label>
+                            <span class="i18n">Show "assignee" column</span></label>
                         <label><input name="count_in_badge" type="checkbox" />
-                            Учитывать при подсчете обновлений</label>
+                            <span class="i18n">Count updated issues</span></label>
 
-                        <a class="delete-tab">[x] Удалить вкладку</a>
+                        <a class="delete-tab">[x] <span class="i18n">Delete tab</p></a>
                         <div style="clear: both"></div>
                     </div>
-                    <a id="add-tab">+ Добавить ещё одну вкладку</a>
+                    <a id="add-tab">+ <span class="i18n">Add tab</span></a>
                 </div>
             </li>
 
             <li class="buttons">
                 <div class="state"><p id="page_state"></p></div>
-                <input name="commit" type="button" onclick="save_options()" value="Сохранить"/>
-                
+                <button onclick="save_options()" class="i18n">Save</button>
             </li>
         </ul>
     </div>
