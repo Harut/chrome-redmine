@@ -19,8 +19,7 @@ The main idea is to allow users to create own filters for issues they want to wa
 User can create several filters, each of them is shown on separate tab in Chrome's
 default extension popup. Basic web developer skills are required to configure filters.
 
-The project is currently in development, so many features are not available. For example,
-the interface of configuration page is available only in Russian.
+The project is currently in development, so many features are not available.
 
 .. _configuration:
 
