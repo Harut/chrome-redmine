@@ -57,7 +57,7 @@
     }
 
     //window.setInterval(5*6*1000, function(){
-    window.setInterval(recalculate, (localStorage.interval_upd || 5) * 1000);
+    window.setInterval(recalculate, (localStorage.interval_upd || 5) * 1000 * 60);
 
     function recalculate(){
         var tabs = JSON.parse(localStorage.tabs);

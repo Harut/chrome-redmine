@@ -8,10 +8,8 @@
             padding: 0; margin: 0;
         }
         #tasks tr>td:first-child { text-align: left}
-        #tasks td { padding: 4px; border-width: 1px; border-style: solid;
-            font-size: 12px;
-            font-family: sans;
-        }
+        #tasks td { padding: 4px; font-size: 12px;font-family: sans;}
+
 	  </style>
 			
       <script type="text/javascript">
@@ -21,7 +19,7 @@
 		}
 
         function tab_click(){
-            var active_tab = document.getElementById('tabs').getElementsByClassName('active')[0];
+            var active_tab = document.getElementById('forTabsContent').getElementsByClassName('active')[0];
             active_tab.className = '';
             document.getElementById(active_tab.getAttribute('for')).style.display = 'none';
 
@@ -31,11 +29,11 @@
 
         function load_tabs(){
             tabs = JSON.parse(localStorage.tabs);
-            var tabs_elem = document.getElementById('tabs');
+            var tabs_elem = document.getElementById('forTabsContent');
             for (var i=0; i<tabs.length; i++){
                 var tab = document.createElement('label');
                 tab.setAttribute('for', 'tab-' + i);
-                tab.innerText = tabs[i].name;
+                tab.innerHTML = '<span>'+tabs[i].name+'</span>';
                 tab.addEventListener('click', tab_click);
                 tabs_elem.appendChild(tab);
                 load_tasks(i, tabs[i], tab);
@@ -45,7 +43,7 @@
                 }
             }
             if (tabs.length > 1){
-                tabs_elem.style.display = 'block';
+                document.getElementById('tabs').style.display = 'block';
             }
         }
 
@@ -69,6 +67,17 @@
 
                 for (var i=0; i<tasks.length; i++){
                     var task = document.createElement('tr');
+                    
+                    
+                    var td_status = document.createElement('td');
+                    td_status.classList.add('status');
+                    task.appendChild(td_status);
+                    
+                    var td0 = document.createElement('td');
+                    td0.innerHTML = '<input type="checkbox" class="checkboxTask_'+tasks[i].id+'"/>';
+                    task.appendChild(td0);
+                    
+                    
                     var td1 = document.createElement('td');
                     var link = document.createElement('a');
                     link.setAttribute('href', localStorage["redmine_url"] +'issues/' + tasks[i].id);
@@ -80,15 +89,18 @@
                     td1.appendChild(link);
 
                     if(new_tasks[tasks[i].id] !== false){
-                        link.style.fontWeight = 'bold';
+                        link.classList.add('bold');
                         has_unread = true;
                     }
-
+                    
+                    /*
                     if (config.show_status){
                         var td2 = document.createElement('td');
                         td2.innerText = tasks[i].status.name;
                         task.appendChild(td2);
                     }
+                    */
+                    
                     if (config.show_project){
                         var td3 = document.createElement('td');
                         td3.innerText = tasks[i].project.name;
@@ -96,7 +108,7 @@
                     }
                     if (config.show_assignee){
                         var td4 = document.createElement('td');
-                        td4.innerText = tasks[i].assigned_to?tasks[i].assigned_to.name:'';
+                        td4.innerText = tasks[i].assigned_to ? tasks[i].assigned_to.name : '';
                         task.appendChild(td4);
                     }
 
@@ -109,7 +121,7 @@
                     table.appendChild(task);
                 }
                 if (has_unread){
-                    tab.style.fontWeight = 'bold';
+                    //tab.style.fontWeight = 'bold';
                 }
             }
             var url = localStorage.redmine_url + 'issues.json?'+ config.filter +'&sort=priority%3Adesc&limit=100';
@@ -127,7 +139,11 @@
 	  </script>
 	</head>
 	<body onload="LoadPage();">
-        <div id="tabs" style="display: none"></div>
+        <div id="tabs" style="display:none;">
+            <div class="toleft">&#8249;</div>
+            <div id="forTabsContent"></div>
+            <div class="toright">&#8250;</div>
+        </div>
         <div id='tasks'></div>
 	</body>
 </html>
