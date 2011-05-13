@@ -89,7 +89,8 @@
                     td1.appendChild(link);
 
                     if(new_tasks[tasks[i].id] !== false){
-                        link.classList.add('bold');
+                        //link.classList.add('bold');
+                        link.style.fontWeight = 'bold';
                         has_unread = true;
                     }
                     
@@ -122,7 +123,7 @@
                     table.appendChild(task);
                 }
                 if (has_unread){
-                    //tab.style.fontWeight = 'bold';
+                    tab.style.fontWeight = 'bold';
                 }
             }
             var url = localStorage.redmine_url + 'issues.json?'+ config.filter +'&sort=priority%3Adesc&limit=100';

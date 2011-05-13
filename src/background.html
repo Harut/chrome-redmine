@@ -36,13 +36,13 @@
                 // Getting server date in this strange way
                 var xhr = new XMLHttpRequest();
                 xhr.onload = function(e){
-                    var views = JSON.parse(localStorage.viewed_tasks)
-                    var date_header = this.getResponseHeader('Date')
+                    var views = JSON.parse(localStorage.viewed_tasks);
+                    var date_header = this.getResponseHeader('Date');
                     views[task_id] = date_header? new Date(date_header) : new Date();
                     localStorage.viewed_tasks = JSON.stringify(views);
                     recalculate();
                 }
-                xhr.open('GET', localStorage.redmine_url + 'images/projects.png', true);
+                xhr.open('GET', localStorage.redmine_url + 'images/projects.png?' + new Date().valueOf(), true);
                 xhr.send(null);
             }
         }
