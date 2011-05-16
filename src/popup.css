@@ -22,7 +22,7 @@ tr.issue { text-align: left; white-space: nowrap; }
 
 table td {padding:2px;}
 
-table td.status {
+table td.priority {
     width: 3px;
     height: 100%;
     padding: 0 !important;
@@ -30,18 +30,18 @@ table td.status {
     background: white;
     border-left: 1px solid white;
     }
-    td.status input {
+    td.priority input {
         position: relative;
         top: 1px;
         }
 
-tr.priority-3 td.status {
+tr.priority-3 td.priority {
     background: #c00000;
     }
-tr.priority-2 td.status {
+tr.priority-2 td.priority {
     background: #767676;
     }
-tr.priority-1 td.status {
+tr.priority-1 td.priority {
     background: #46af2d;
     }
 
@@ -118,4 +118,14 @@ tr.priority-1 td.status {
     height: 26px;
     width: auto;
     margin: 0 26px;
+}
+
+.closed_tasks .closebutton input {
+    display: none;
+}
+.closed_tasks .closebutton {
+    padding: 0 6px;
+}
+.closed_tasks .closebutton:after {
+    content: "✓";
 }

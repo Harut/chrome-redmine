@@ -53,30 +53,38 @@
             xhr.onload = function(e){
                 var tasks = JSON.parse(this.responseText).issues;
                 var tabs_contents = document.getElementById('tasks');
+                var tab_content = document.createElement('div');
+                tab_content.setAttribute('id', 'tab-' + index);
                 var table = document.createElement('table');
-                table.setAttribute('id', 'tab-' + index);
                 if (index != 0){
-                    table.style.display = 'none';
+                    tab_content.style.display = 'none';
                 }
-                tabs_contents.appendChild(table);
+                tabs_contents.appendChild(tab_content);
+                tab_content.appendChild(table);
 
                 var oddeven = 'odd';
 
+                var closed_statuses = JSON.parse(localStorage.closed_statuses);
                 var new_tasks = JSON.parse(localStorage.new_tasks || '{}');
                 var has_unread = false;
+                var closed_table;
 
                 for (var i=0; i<tasks.length; i++){
                     var task = document.createElement('tr');
                     
                     
                     var td_status = document.createElement('td');
-                    td_status.classList.add('status');
+                    td_status.classList.add('priority');
+                    td_status.innerHTML = '&nbsp;';
                     task.appendChild(td_status);
                     
-                    var td0 = document.createElement('td');
-                    td0.innerHTML = '<input type="checkbox" class="checkboxTask_'+tasks[i].id+'"/>';
-                    task.appendChild(td0);
-                    
+                    if (localStorage.close_status){
+                        var td0 = document.createElement('td');
+                        td0.classList.add('closebutton');
+                        td0.innerHTML = '<input type="checkbox" value="'+tasks[i].id+'" />';
+                        animate_checkbox(td0.querySelector('input'));
+                        task.appendChild(td0);
+                    }
                     
                     var td1 = document.createElement('td');
                     var link = document.createElement('a');
@@ -97,6 +105,7 @@
                     
                     if (config.show_status){
                         var td2 = document.createElement('td');
+                        td2.classList.add('status');
                         td2.style.textAlign = 'center';
                         td2.innerText = tasks[i].status.name;
                         task.appendChild(td2);
@@ -120,7 +129,28 @@
                     oddeven = (oddeven == 'odd')? 'even':'odd';
                     task.setAttribute('class', cls);
 
-                    table.appendChild(task);
+                    if (closed_statuses.indexOf('' + tasks[i].status.id) != -1) {
+                        if (!closed_table){
+                            closed_table = document.createElement('table');
+                            closed_table.classList.add('closed_tasks');
+                            /*closed_table.style.display = 'none';
+                            var table_link = document.createElement('a');
+                            table_link.innerText = 'Показать закрытые';
+                            table_link.href = '#';
+                            table_link.addEventListener('click', function(){
+                                this.style.visibility = 'hidden';
+                                this.parentNode.querySelector('.closed_tasks').style.display = '';
+                            });
+
+
+                            tab_content.appendChild(table_link);*/
+                            tab_content.appendChild(closed_table);
+                        }
+                        closed_table.appendChild(task);
+
+                    } else {
+                        table.appendChild(task);
+                    }
                 }
                 if (has_unread){
                     tab.style.fontWeight = 'bold';
@@ -129,6 +159,28 @@
             var url = localStorage.redmine_url + 'issues.json?'+ config.filter +'&sort=priority%3Adesc&limit=100';
             xhr.open('GET', url, true);
             xhr.send(null);
+        }
+
+        function animate_checkbox(checkbox){
+            checkbox.addEventListener('click', function(){
+                change_status(checkbox.value, localStorage.close_status, function(){
+                    var tr = checkbox.parentNode.parentNode;
+                    var tab = tr.parentNode.parentNode;
+                    tab.querySelector('.closed_tasks').appendChild(tr);
+                    var status_cell = tr.querySelector('td.status');
+                    if (status_cell) {
+                        var statuses = JSON.parse(localStorage.statuses);
+                        status_cell.innerText = statuses[localStorage.close_status].name;
+                    }
+
+                    // updating view time
+                    var views = JSON.parse(localStorage.viewed_tasks);
+                    var date_header = this.getResponseHeader('Date');
+                    views[checkbox.value] = date_header? new Date(date_header) : new Date();
+                    localStorage.viewed_tasks = JSON.stringify(views);
+
+                })
+            })
         }
 
 		function change_status(issue_id, status_id, callback){

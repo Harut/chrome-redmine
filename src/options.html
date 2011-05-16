@@ -60,6 +60,22 @@
         localStorage["tabs"] = JSON.stringify(tabs_conf);
         localStorage["currentLocale"] = document.getElementById('locale').value;
 
+        var statuses_opts = document.querySelectorAll('#closed_statuses option');
+        var statuses = [];
+        for (var i=statuses_opts.length;i--;){
+            if (statuses_opts[i].selected){
+                statuses.push(statuses_opts[i].value);
+            }
+        }
+        localStorage["closed_statuses"] = JSON.stringify(statuses);
+
+        var statuses_opts = document.querySelectorAll('#close_status option');
+        for (var i=statuses_opts.length;i--;){
+            if (statuses_opts[i].selected){
+                localStorage["close_status"] = statuses_opts[i].value;
+            }
+        }
+
         page_state.innerHTML = "Сохранено.";		
 	}
 
@@ -127,6 +143,32 @@
         });
 
         document.getElementById('locale').value = localStorage["currentLocale"];
+
+        var saved = JSON.parse(localStorage.closed_statuses);
+        var statuses = JSON.parse(localStorage.statuses);
+        var statuses_select = document.getElementById('closed_statuses');
+        statuses_select.style.display = 'inline';
+        for (var id in statuses){
+            var option = document.createElement('option');
+            option.innerText = statuses[id].name;
+            option.value = id;
+            if (saved.indexOf(id) != -1){
+                option.selected = true;
+            }
+            statuses_select.appendChild(option);
+        }
+
+        var statuses_select = document.getElementById('close_status');
+        for (var id in statuses){
+            var option = document.createElement('option');
+            option.innerText = statuses[id].name;
+            option.value = id;
+            if (localStorage.close_status == id){
+                option.selected = true;
+            }
+            statuses_select.appendChild(option);
+        }
+
 	}
 
 	
@@ -143,7 +185,7 @@
     
     
     <div class="inner_wrapper">
-        <p>Авторы и другая текстовая инфа, аля Welcome ;)</p>
+        <!--p>Авторы и другая текстовая инфа, аля Welcome ;)</p-->
         <h2 class="section_title i18n">Common options</h2>
         <ul class="options">
             <li class="opt">
@@ -160,10 +202,25 @@
             </li>
             <li class="opt">
                 <div class="option">
-                    <label for="interval_upd"><span class="i18n">Locale</span><span class="req">*</span>:</label>
+                    <label for="locale"><span class="i18n">Locale</span><span class="req">*</span>:</label>
                     <select id="locale">
                         <option value="en">English</option>
                         <option value="ru">Русский</option>
+                    </select>
+                </div>
+            </li>
+            <li class="opt">
+                <div class="option">
+                    <label for="closed_statuses"><span class="i18n">Statuses, are displayed as closed</span>:</label>
+                    <select id="closed_statuses" multiple="multiple">
+                    </select>
+                </div>
+            </li>
+            <li class="opt">
+                <div class="option">
+                    <label for="close_status"><span class="i18n">Status, set on close action</span>:</label>
+                    <select id="close_status">
+                        <option value=""></option>
                     </select>
                 </div>
             </li>

@@ -5,6 +5,7 @@
     });*/
     
     localStorage.viewed_tasks = localStorage.viewed_tasks || '{}';
+    localStorage.closed_statuses = localStorage.closed_statuses || '[]';
     localStorage.tabs = localStorage.tabs || JSON.stringify([
         {'name': 'My',       'filter': 'assigned_to_id=me',
          'show_status': true, 'show_project': true, 'show_assignee': false,

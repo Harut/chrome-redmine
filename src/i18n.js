@@ -16,7 +16,9 @@ window.i18n.en = {
     'Redmine URL': '',
     'Common options': '',
     'Save': '',
-    'Locale': ''
+    'Locale': '',
+    'Statuses, are displayed as closed': '',
+    'Status, set on close action': ''
 }
 
 window.i18n.ru = {
@@ -35,7 +37,9 @@ window.i18n.ru = {
     'Redmine URL': 'URL на Redmine',
     'Common options': 'Главные настройки',
     'Save': 'Сохранить',
-    'Locale': 'Язык'
+    'Locale': 'Язык',
+    'Statuses, are displayed as closed': 'Статусы, отображаемые как закрытые',
+    'Status, set on close action': 'Статус, устанавливаемый при закрытии задачи'
 }
 
 
@@ -50,7 +54,6 @@ function _(s){
 
 window.addEventListener('DOMContentLoaded', function(){
     var i18n_elems = document.getElementsByClassName('i18n');
-    console.log(i18n_elems);
     for (var i=i18n_elems.length; i--;){
         i18n_elems[i].innerText = _(i18n_elems[i].innerText);
     }
