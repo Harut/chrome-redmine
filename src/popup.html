@@ -61,13 +61,19 @@
                 }
                 tabs_contents.appendChild(tab_content);
                 tab_content.appendChild(table);
+                
+                var opened_table = document.createElement('tbody');
+                table.appendChild(opened_table);
+
+                var closed_table = document.createElement('tbody');
+                closed_table.classList.add('closed_tasks');
+                table.appendChild(closed_table);
 
                 var oddeven = 'odd';
 
                 var closed_statuses = JSON.parse(localStorage.closed_statuses);
                 var new_tasks = JSON.parse(localStorage.new_tasks || '{}');
                 var has_unread = false;
-                var closed_table;
 
                 for (var i=0; i<tasks.length; i++){
                     var task = document.createElement('tr');
@@ -130,10 +136,8 @@
                     task.setAttribute('class', cls);
 
                     if (closed_statuses.indexOf('' + tasks[i].status.id) != -1) {
-                        if (!closed_table){
-                            closed_table = document.createElement('table');
-                            closed_table.classList.add('closed_tasks');
-                            /*closed_table.style.display = 'none';
+                        /*if (!closed_table){
+                            closed_table.style.display = 'none';
                             var table_link = document.createElement('a');
                             table_link.innerText = 'Показать закрытые';
                             table_link.href = '#';
@@ -143,18 +147,23 @@
                             });
 
 
-                            tab_content.appendChild(table_link);*/
-                            tab_content.appendChild(closed_table);
-                        }
+                            tab_content.appendChild(table_link);
+                        }*/
                         closed_table.appendChild(task);
-
                     } else {
-                        table.appendChild(task);
+                        opened_table.appendChild(task);
                     }
                 }
                 if (has_unread){
                     tab.style.fontWeight = 'bold';
                 }
+
+                if (tasks.length){
+                    var delimiter = document.createElement('tbody');
+                    delimiter.innerHTML = "<tr><td colspan='" + table.querySelector('tr').querySelectorAll('td').length  +"'></td></tr>"
+                    table.insertBefore(delimiter, closed_table);
+                }
+                
             }
             var url = localStorage.redmine_url + 'issues.json?'+ config.filter +'&sort=priority%3Adesc&limit=100';
             xhr.open('GET', url, true);
